@@ -5,7 +5,7 @@
 
         <a href="{{ route('games.index') }}" class="btn btn-primary">Back to games list</a>
 
-        <form action="{{ route('games.update', $game->id) }}" method="POST">
+        <form action="{{ route('games.update', $game->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -59,6 +59,17 @@
                 @error('price')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
+            </div>
+            <div class="form-group mb-2">
+                <label for="image">Image</label>
+                <input type="file" name="image" class="form-control" id="image">
+                @error('image')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+                @if ($game->image)
+                    <p><img src="{{ asset('storage/' . $game->image) }}" alt="Game Image" class="img-fluid" width="200"
+                            height="200"></p>
+                @endif
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Game;
+use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 {
@@ -27,8 +28,15 @@ class GameController extends Controller
             'release_date' => 'required|date',
             'platform' => 'required|string',
             'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $validatedData['image'] = Storage::disk('public')->putFile('games', $request->file('image'));
+        }
+
         Game::create($validatedData);
+
         return redirect()->route("games.index")->with("success", "Game added successfully");
     }
 
@@ -44,21 +52,37 @@ class GameController extends Controller
 
     public function update(Request $request, Game $game)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
             'developer' => 'required|string|max:255',
             'genre' => 'required|string|max:255',
             'release_date' => 'required|date',
             'platform' => 'required|string',
             'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-        $game->update($validatedData);
+
+        if ($request->hasFile('image')) {
+            if ($game->image && Storage::disk('public')->exists($game->image)) {
+                Storage::disk('public')->delete($game->image);
+            }
+
+            $game->image = Storage::disk('public')->putFile('games', $request->file('image'));
+        }
+
+        $game->update($request->except('image'));
+
         return redirect()->route("games.index")->with("success", "Game updated successfully");
     }
 
     public function destroy(Game $game)
     {
+        if ($game->image && Storage::disk('public')->exists($game->image)) {
+            Storage::disk('public')->delete($game->image);
+        }
+
         $game->delete();
+
         return redirect()->route("games.index")->with("success", "Game removed successfully");
     }
 }

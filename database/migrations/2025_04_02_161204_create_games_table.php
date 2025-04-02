@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('release_date');
             $table->string('platform');
             $table->decimal('price');
+            $table->string('image')->nullable();
         });
     }
 

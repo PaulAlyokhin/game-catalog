@@ -11,6 +11,9 @@
         <p><strong>Release Date:</strong> {{ $game->release_date }}</p>
         <p><strong>Platform:</strong> {{ \App\Models\Game::PLATFORMS[$game->platform] ?? 'Unknown Platform' }}</p>
         <p><strong>Price:</strong> ${{ $game->price }}</p>
+        @if ($game->image)
+            <p><img src="{{ asset('storage/' . $game->image) }}" alt="Game Image" class="img-fluid" width="200" height="200"></p>
+        @endif
 
         <a href="{{ route('games.edit', $game->id) }}" class="btn btn-primary">Edit</a>
 

@@ -5,7 +5,7 @@
 
         <a href="{{ route('games.index') }}" class="btn btn-primary">Back to games list</a>
 
-        <form action="{{ route('games.store') }}" method="POST">
+        <form action="{{ route('games.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="form-group mb-2">
@@ -51,6 +51,13 @@
                 <label for="price">Price</label>
                 <input type="number" name="price" class="form-control" id="price" min="0" step="0.01">
                 @error('price')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="form-group mb-2">
+                <label for="image">Image</label>
+                <input type="file" name="image" class="form-control" id="image">
+                @error('image')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
