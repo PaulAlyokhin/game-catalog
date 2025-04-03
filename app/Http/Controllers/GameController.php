@@ -8,9 +8,25 @@ use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $games = Game::all();
+        $query = Game::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            $query->where(function ($query) use ($search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('genre', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('filter') && in_array($request->filter, array_keys(Game::PLATFORMS))) {
+            $query->where('platform', $request->filter);
+        }
+
+        $games = $query->paginate(5);
+
         return view("games.index", compact("games"));
     }
 

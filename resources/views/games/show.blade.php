@@ -1,28 +1,64 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
-        <h1>{{ $game->title }}</h1>
+    <div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-column flex-sm-row align-items-stretch">
+            <a href="{{ route('games.index') }}" class="btn btn-primary">
+                <i class="fa-solid fa-arrow-left"></i> Back to games list
+            </a>
+        </div>
 
-        <a href="{{ route('games.index') }}" class="btn btn-primary">Back to games list</a>
-
-        <p><strong>Title:</strong> {{ $game->title }}</p>
-        <p><strong>Developer:</strong> {{ $game->developer }}</p>
-        <p><strong>Genre:</strong> {{ $game->genre }}</p>
-        <p><strong>Release Date:</strong> {{ $game->release_date }}</p>
-        <p><strong>Platform:</strong> {{ \App\Models\Game::PLATFORMS[$game->platform] ?? 'Unknown Platform' }}</p>
-        <p><strong>Price:</strong> ${{ $game->price }}</p>
         @if ($game->image)
-            <p><img src="{{ asset('storage/' . $game->image) }}" alt="Game Image" class="img-fluid" width="200" height="200"></p>
+            <p class="text-center text-sm-start">
+                <img src="{{ asset('storage/' . $game->image) }}" alt="Game Image" class="img-fluid" width="200" height="200">
+            </p>
         @endif
 
-        <a href="{{ route('games.edit', $game->id) }}" class="btn btn-primary">Edit</a>
+        <div class="table-responsive">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Title:</td>
+                        <td>{{ $game->title }}</td>
+                    </tr>
+                    <tr>
+                        <td>Developer:</td>
+                        <td>{{ $game->developer }}</td>
+                    </tr>
+                    <tr>
+                        <td>Genre:</td>
+                        <td>{{ $game->genre }}</td>
+                    </tr>
+                    <tr>
+                        <td>Release Date:</td>
+                        <td>{{ $game->release_date->format('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Platform:</td>
+                        <td>{{ \App\Models\Game::PLATFORMS[$game->platform] ?? 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Price:</td>
+                        <td>
+                            @if ($game->price > 0)
+                                ${{ $game->price }}
+                            @else
+                                Free to play
+                            @endif
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <form action="{{ route('games.destroy', $game->id) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?');">
-                Delete
-            </button>
-        </form>
+        <div class="d-flex flex-column flex-sm-row gap-1">
+            <a href="{{ route('games.edit', $game->id) }}" class="btn btn-primary">Edit</a>
+            <form action="{{ route('games.destroy', $game->id) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Are you sure?');">
+                    Delete
+                </button>
+            </form>
+        </div>
     </div>
 @endsection

@@ -10,6 +10,11 @@ class Game extends Model
         'pc' => 'PC',
         'playstation' => 'PlayStation',
         'xbox' => 'Xbox',
+        'android' => 'Android',
+        'ios' => 'iOS',
+    ];
+    protected $casts = [
+        'release_date' => 'date',
     ];
     public $timestamps = false;
     protected $fillable = [
