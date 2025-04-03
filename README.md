@@ -19,4 +19,5 @@ Installation & deployment:
         ./vendor/bin/sail up -d
 - Run migrations with command
         ./vendor/bin/sail artisan migrate
+- Run seeder with command ./vendor/bin/sail artisan db:seed --class=GameSeeder
 - Open your web-browser and follow to the http://localhost
